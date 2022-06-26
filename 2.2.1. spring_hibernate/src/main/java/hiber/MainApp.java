@@ -6,9 +6,6 @@ import hiber.model.User;
 import hiber.service.UserService;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
-import java.sql.SQLException;
-import java.util.List;
-
 /**
  * Задание:
  * 1. Создайте соединение к своей базе данных и схему. Запустите приложение. Проверьте, что оно полностью работает.
