@@ -1,11 +1,14 @@
 package hiber.dao;
 
+import hiber.model.Car;
 import hiber.model.User;
+import org.hibernate.ObjectNotFoundException;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.TypedQuery;
+import java.io.Serializable;
 import java.util.List;
 
 @Repository
@@ -22,8 +25,22 @@ public class UserDaoImp implements UserDao {
    @Override
    @SuppressWarnings("unchecked")
    public List<User> listUsers() {
-      TypedQuery<User> query=sessionFactory.getCurrentSession().createQuery("from User");
+      TypedQuery<User> query = sessionFactory.getCurrentSession().createQuery("from User");
       return query.getResultList();
+   }
+
+   @Override
+   public User getUserByCar(String model, int series) {
+      Car car;
+      try {
+         car = (Car) sessionFactory.getCurrentSession()
+                 .createQuery("from Car where model = :m and series = :s")
+                 .setParameter("m", model)
+                 .setParameter("s", series).list().get(0);
+      } catch (IndexOutOfBoundsException e) {
+         throw new ObjectNotFoundException(new Serializable() {}, "Car");
+      }
+      return car.getOwner();
    }
 
 }
