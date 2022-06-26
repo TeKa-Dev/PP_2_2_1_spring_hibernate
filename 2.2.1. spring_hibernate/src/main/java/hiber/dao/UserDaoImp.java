@@ -36,9 +36,14 @@ public class UserDaoImp implements UserDao {
          car = (Car) sessionFactory.getCurrentSession()
                  .createQuery("from Car where model = :m and series = :s")
                  .setParameter("m", model)
-                 .setParameter("s", series).list().get(0);
+                 .setParameter("s", series)
+                 .list()
+                 .get(0);
+
       } catch (IndexOutOfBoundsException e) {
-         throw new ObjectNotFoundException(new Serializable() {}, "Car");
+         throw new RuntimeException("\nCaused: persistence " + Car.class +
+                 " with the given parameters model=" + model +
+                 ", series=" + series + " was not found in the database");
       }
       return car.getOwner();
    }
